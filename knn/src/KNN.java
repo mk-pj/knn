@@ -1,6 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.function.Function;
 
 public class KNN {
 
@@ -23,11 +22,12 @@ public class KNN {
     }
 
     public static void classify(List<DataPoint> data, List<DataPoint> dataToClassify, int k) {
+        Comparator<PointDistance> distanceComparator = Comparator.comparingDouble(p -> p.distance);
         for(DataPoint pointToClassify : dataToClassify) {
             List<PointDistance> distances = new ArrayList<>();
             for(DataPoint dataPoint : data)
                 distances.add(new PointDistance(distance(pointToClassify.x, dataPoint.x), dataPoint));
-            distances.sort(Comparator.comparingDouble(p -> p.distance));
+            distances.sort(distanceComparator);
             Map<Kl, Integer> count = new EnumMap<>(Kl.class);
             for(int i = 0; i < k; ++i) {
                 PointDistance pointDistance = distances.get(i);
@@ -47,20 +47,21 @@ public class KNN {
     public static double testResult(List<DataPoint> predictions, List<DataPoint> answers) {
         int rightAnswers = 0;
         for(int i = 0; i < predictions.size(); ++i) {
-            System.out.println(predictions.get(i));
-            System.out.println(answers.get(i));
-            System.out.println("======================");
+            System.out.println("Prediction: " + predictions.get(i));
+            System.out.println("Actual:     " + answers.get(i));
+            System.out.println();
             if (predictions.get(i).dataClass == answers.get(i).dataClass)
                 rightAnswers++;
         }
         return rightAnswers / (double) predictions.size();
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("iris.txt"));
-        ReadData readData = new ReadData(sc);
-        Map<Kl, Data> inputData = readData.readData(30);
-
+    public static void launch(
+        int k,
+        int testingSetSize,
+        Function<Integer, Map<Kl, Data>> readingDataOperation
+    ) {
+        Map<Kl, Data> inputData = readingDataOperation.apply(testingSetSize);
         inputData.forEach((key, value) -> {
             System.out.println(key);
             System.out.println("train: " + value.getTraining().size());
@@ -83,18 +84,8 @@ public class KNN {
                     .toList();
             dataToClassify.addAll(test);
         }
-
-        for(int i = 0; i < dataToClassify.size(); ++i) {
-            System.out.println(dataToClassify.get(i));
-            System.out.println(testAnswers.get(i));
-            System.out.println("======================");
-        }
-
-        System.out.println("======================");
-        System.out.println("======================");
-
-        classify(data, dataToClassify, 1);
-
-        System.out.println(testResult(dataToClassify, testAnswers));
+        classify(data, dataToClassify, k);
+        System.out.println("Accuracy: " + testResult(dataToClassify, testAnswers));
     }
+
 }
