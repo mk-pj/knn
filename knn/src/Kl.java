@@ -1,5 +1,6 @@
 public enum Kl {
     SETOSA,
     VERSICOLOR,
-    VIRGINICA
+    VIRGINICA,
+    UNDETERMINED
 }
