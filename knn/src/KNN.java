@@ -85,7 +85,7 @@ public class KNN {
             dataToClassify.addAll(test);
         }
         classify(data, dataToClassify, k);
-        System.out.println("Accuracy: " + testResult(dataToClassify, testAnswers));
+        System.out.printf("Accuracy: %.2f%%\n", 100 * testResult(dataToClassify, testAnswers));
     }
 
 }
