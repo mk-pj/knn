@@ -67,7 +67,7 @@ public class KNN {
             System.out.println("train: " + value.getTraining().size());
             System.out.println("testing: " + value.getTesting().size());
         });
-
+        System.out.println();
         List<DataPoint> dataToClassify = new ArrayList<>();
         List<DataPoint> data = new ArrayList<>();
         List<DataPoint> testAnswers = new ArrayList<>();
