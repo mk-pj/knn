@@ -92,7 +92,6 @@ public class ReadData {
                 virginicaTestIndex = getRandomIndex(Kl.VIRGINICA);
             dataIndices[virginicaTestIndex] = 1;
         }
-        System.out.println(Arrays.toString(dataIndices));
         sc.nextLine();
         int rowCounter = 0;
 
